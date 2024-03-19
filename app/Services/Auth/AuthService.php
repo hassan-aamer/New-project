@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -16,7 +17,7 @@ class AuthService
         return response()->json([
             'status' => true,
             'message' => 'All Users Successfully',
-            'data' => $users,
+            'data' => UserResource::collection($users),
         ], 200);
     }
 
@@ -53,7 +54,7 @@ class AuthService
                 'status' => true,
                 'message' => 'User Created Successfully',
                 'token' => $user->createToken("API TOKEN")->plainTextToken,
-                "user" => $user,
+                "user" => new UserResource($user),
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
@@ -82,7 +83,7 @@ class AuthService
                 ]);
             }
 
-            $user = User::where('email', $request->email)->first();
+            $user = new UserResource(User::where('email', $request->email)->first());
 
             if (!Auth::guard('api')->attempt($request->only(['email', 'password']))) {
                 return response()->json([
@@ -133,6 +134,7 @@ class AuthService
                 [
                     'name' => 'required|string|max:255',
                     'email' => 'required|email|unique:users,email,' . $user->id,
+                    'phone' => 'required|string|unique:users,phone|regex:/^01[0125][0-9]{8}$/|size:11',
                     'password' => 'sometimes|required|string|min:8|confirmed',
                 ]
             );
@@ -148,13 +150,14 @@ class AuthService
             $user->update([
                 'name' => $request->name,
                 'email' => $request->email,
+                'phone' => $request->phone,
                 'password' => $request->has('password') ? Hash::make($request->password) : $user->password,
             ]);
 
             return response()->json([
                 'status' => true,
                 'message' => 'User updated successfully',
-                'user' => $user
+                'user' => new UserResource($user),
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
@@ -175,7 +178,7 @@ class AuthService
     //Get One User From ID
     public function show($id)
     {
-        $user = User::find($id);
+        $user = new UserResource(User::find($id));
 
         if (!$user) {
             return response([
@@ -187,8 +190,8 @@ class AuthService
 
         return response()->json([
             'status' => true,
-            'user' => $user,
             'message' => 'Get One User successfully',
+            'user' => $user,
         ], 200);
     }
 }
