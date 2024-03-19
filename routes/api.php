@@ -8,9 +8,9 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 //========================================================== Auth ==============================================================
-Route::group(['prefix' => 'Auth'], function () {
+Route::group(['prefix' => 'auth'], function () {
     Route::controller(\App\Http\Controllers\Api\Auth\AuthController::class)->group(function () {
-        Route::post('/register', 'createUser')->middleware('auth:sanctum');
+        Route::post('/register', 'createUser');
         Route::post('/login', 'loginUser');
         Route::post('/logout', 'logout');
         Route::post('/update/{id}', 'update')->middleware('auth:sanctum');
@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //========================================================= Contact ========================================================
 
-    Route::group(['prefix' => 'Contact'], function () {
+    Route::group(['prefix' => 'contact'], function () {
         Route::controller(\App\Http\Controllers\Api\Contact\ContactController::class)->group(function () {
             Route::post('/update/{id}', 'update');
             Route::get('/show/{id}', 'show');
@@ -34,7 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //=========================================================== About ========================================================
 
-    Route::group(['prefix' => 'About'], function () {
+    Route::group(['prefix' => 'about'], function () {
         Route::controller(\App\Http\Controllers\Api\About\AboutController::class)->group(function () {
             Route::post('/update/{id}', 'update');
             Route::get('/show/{id}', 'show');
