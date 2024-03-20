@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Status;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -18,6 +19,7 @@ class AdminSeeder extends Seeder
             'name' => env('ADMIN_NAME'),
             'email' => env('ADMIN_EMAIL'),
             'phone' => env('ADMIN_PHONE'),
+            'type' => Status::ADMIN,
             'password' => Hash::make(env('ADMIN_PASSWORD')),
         ]);
     }
