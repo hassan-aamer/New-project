@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthService
 {
-    //All Users
+
     public function allUsers()
     {
         $users = User::all();
@@ -21,7 +21,7 @@ class AuthService
         ], 200);
     }
 
-    // Registers Users
+
     public function register($request)
     {
         try {
@@ -56,6 +56,7 @@ class AuthService
                 'token' => $user->createToken("API TOKEN")->plainTextToken,
                 "user" => new UserResource($user),
             ], 200);
+
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -64,7 +65,7 @@ class AuthService
         }
     }
 
-    // Login Users
+
     public function login($request)
     {
         try {
@@ -98,6 +99,7 @@ class AuthService
                 'token' => $user->createToken("API TOKEN")->plainTextToken,
                 "user" => $user,
             ], 200);
+
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -106,20 +108,16 @@ class AuthService
         }
     }
 
-
-    //Logout User
     public function logout($request)
     {
-        Auth::logout();
+        // Auth::logout();
+        $request->user()->currentAccessToken()->delete();
         return response(["status" => true, "message" => "Logout success"], 200);
     }
 
-
-    // Update User
     public function update($request, $id)
     {
         try {
-            // التحقق من وجود المستخدم
             $user = User::find($id);
             if (!$user) {
                 return response()->json([
@@ -128,7 +126,6 @@ class AuthService
                 ], 404);
             }
 
-            //Validated
             $validateUser = Validator::make(
                 $request->all(),
                 [
@@ -143,10 +140,9 @@ class AuthService
                 return response()->json([
                     'status' => false,
                     'errors' => $validateUser->errors()
-                ], 422); // استخدم 422 للإشارة إلى أن البيانات غير صالحة
+                ], 422);
             }
 
-            // تحديث بيانات المستخدم
             $user->update([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -159,6 +155,7 @@ class AuthService
                 'message' => 'User updated successfully',
                 'user' => new UserResource($user),
             ], 200);
+
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -167,15 +164,12 @@ class AuthService
         }
     }
 
-    // Delete One User From ID
     public function delete($id)
     {
         User::destroy($id);
         return response(["status" => true, "message" => "deleted success"], 200);
     }
 
-
-    //Get One User From ID
     public function show($id)
     {
         $user = new UserResource(User::find($id));
