@@ -111,8 +111,9 @@ class AuthService
     public function logout($request)
     {
         // Auth::logout();
+        // Auth::guard('api')->logout();
         $request->user()->currentAccessToken()->delete();
-        return response(["status" => true, "message" => "Logout success"], 200);
+        return response(["status" => true, "message" => "Successfully logged out"], 200);
     }
 
     public function update($request, $id)
