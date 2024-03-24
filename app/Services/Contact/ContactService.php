@@ -2,6 +2,7 @@
 
 namespace App\Services\Contact;
 
+use App\Http\Resources\Contact\ContactResource;
 use App\Models\Contact;
 use App\Traits\CRUD;
 use App\Traits\ApiResponser;
@@ -35,18 +36,18 @@ class ContactService
     public function createContact($request)
     {
         $Contact = $this->store($this->model, $request);
-        return $Contact ? $this->success($Contact, 201, 'Contact created successfully') : $this->error(null, 404, 'can not create Contact');
+        return $Contact ? $this->success(new ContactResource($Contact), 201, 'Contact created successfully') : $this->error(null, 404, 'can not create Contact');
     }
 
     public function updateContact($id, $request)
     {
         $Contact = $this->update($this->model, $request, $id);
-        return $Contact ? $this->success($Contact, 200, 'Contact updated successfully') : $this->error(null, 404, 'can not update Contact');
+        return $Contact ? $this->success(new ContactResource($Contact), 200, 'Contact updated successfully') : $this->error(null, 404, 'can not update Contact');
     }
 
     public function deleteContact($id)
     {
         $Contact = $this->destroy($this->model, $id);
-        return $Contact ? $this->success($Contact, 200, 'Contact deleted successfully') : $this->error(null, 404, 'can not delete Contact');
+        return $Contact ? $this->success(new ContactResource($Contact), 200, 'Contact deleted successfully') : $this->error(null, 404, 'can not delete Contact');
     }
 }
