@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api\Contact;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Contact\ContactRequest;
 use App\Services\Contact\ContactService;
-use Illuminate\Http\Request;
+
 
 class ContactController extends Controller
 {
@@ -18,7 +19,7 @@ class ContactController extends Controller
     {
         return $this->ContactService->getContact($id);
     }
-    public function update(Request $request, $id)
+    public function update(ContactRequest $request, $id)
     {
         return $this->ContactService->updateContact($id, $request->all());
     }

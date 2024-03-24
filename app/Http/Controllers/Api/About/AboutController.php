@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api\About;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\About\AboutRequest;
 use App\Services\About\AboutService;
-use Illuminate\Http\Request;
+
 
 class AboutController extends Controller
 {
@@ -18,7 +19,7 @@ class AboutController extends Controller
     {
         return $this->AboutService->getAbout($id);
     }
-    public function update(Request $request, $id)
+    public function update(AboutRequest $request, $id)
     {
         return $this->AboutService->updateAbout($id, $request->all());
     }
